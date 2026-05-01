@@ -8,10 +8,9 @@ import 'swiper/css/free-mode';
 import 'swiper/css/thumbs';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
-import Provider from "@/components/shared/Provider";
+import Provider from "@/components/Shared/Provider";
 
 import { Exo_2 } from 'next/font/google'
-import { Toaster } from "@/components/ui/sonner";
 import { ToastContainer } from "react-toastify";
 const geistSans = Geist({
   variable: "--font-geist-sans",

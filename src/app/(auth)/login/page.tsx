@@ -81,14 +81,26 @@ export default function LoginPage() {
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
 
             <div className="flex flex-col gap-4">
-              <Button variant="outline" className="w-full font-medium justify-center gap-3 h-12 text-gray-700">
-                <Icon icon="fe:google" className="size-5 text-red-600" />
-                Continue with Google
-              </Button>
-              <Button variant="outline" className="w-full  font-medium justify-center gap-3 h-12 text-gray-700">
-                <Icon icon="logos:facebook" className="size-5" />
-                Continue with Facebook
-              </Button>
+               <Button 
+    variant="outline" 
+    type="button"
+    onClick={() => signIn("google", { callbackUrl: "/" })}
+    className="w-full font-medium justify-center gap-3 h-12 text-gray-700"
+  >
+    <Icon icon="fe:google" className="size-5 text-red-600" />
+    Continue with Google
+  </Button>
+
+
+               <Button 
+    variant="outline" 
+    type="button"
+    onClick={() => signIn("facebook", { callbackUrl: "/" })}
+    className="w-full font-medium justify-center gap-3 h-12 text-gray-700"
+  >
+    <Icon icon="logos:facebook" className="size-5" />
+    Continue with Facebook
+  </Button>
             </div>
 
             <div className="relative flex items-center">

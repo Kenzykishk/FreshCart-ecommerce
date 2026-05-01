@@ -15,10 +15,11 @@ import women from "@/assets/images/women.png";
 import Image from 'next/image';
 import FeaturesData from '@/components/Shared/FeaturesData/FeaturesData';
 import { footerFeaturesData } from '@/constants/features';
+import { signIn } from "next-auth/react";
 
 const socialButtons = [
-  { icon: "gg:google", label: "Google" },
-  { icon: "logos:facebook", label: "Facebook" },
+  { icon: "gg:google", label: "Google", provider: "google" },
+  { icon: "logos:facebook", label: "Facebook", provider: "facebook" },
 ];
 
 const leftFeatures = [
@@ -62,16 +63,16 @@ export default function RegisterPage() {
 
   return (
     <>
-    <section className="  flex items-center justify-center  py-12 ">
+    <section className="flex items-center justify-center py-12">
       <div className="container">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start    rounded-[2.5rem] p-8 lg:p-16 ">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start rounded-[2.5rem] p-8 lg:p-16">
 
-        <div className="space-y-10  px-6 col-span-1 ">
-          <div >
-            <h1 className="text-4xl font-extrabold  text-gray-700 leading-tight">
+        <div className="space-y-10 px-6 col-span-1">
+          <div>
+            <h1 className="text-4xl font-extrabold text-gray-700 leading-tight">
               Welcome to <span className="text-green-600">FreshCart</span>
             </h1>
-          <p className="text-xl mt-2 mb-4">Join thousands of happy customers who enjoy fresh groceries delivered right to their doorstep.</p>
+            <p className="text-xl mt-2 mb-4">Join thousands of happy customers who enjoy fresh groceries delivered right to their doorstep.</p>
           </div>
 
           <div className="space-y-6">
@@ -88,11 +89,10 @@ export default function RegisterPage() {
             ))}
           </div>
 
-          <div className="bg-wite rounded-lg p-6 border shadow-sm border-gray-100 relative">
+          <div className="bg-white rounded-lg p-6 border shadow-sm border-gray-100 relative">
             <div className="flex items-center gap-4 mb-4">
               <div className="size-12 rounded-full bg-green-200 overflow-hidden ring-4 ring-white shadow-sm">
-                
-                <Image alt='womenphoto' src={women} width={50} height={50} className='rounded-full'></Image>
+                <Image alt='womenphoto' src={women} width={50} height={50} className='rounded-full' />
               </div>
               <div>
                 <p className="font-bold text-gray-900">Sarah Johnson</p>
@@ -109,10 +109,10 @@ export default function RegisterPage() {
           </div>
         </div>
 
-        <div className="w-full  col-span-1 ml-auto shadow-lg bg-white rounded-lg py-10 px-6">
+        <div className="w-full col-span-1 ml-auto shadow-lg bg-white rounded-lg py-10 px-6">
           <div className="mb-8 flex justify-center flex-col items-center">
-            <h2 className="text-3xl font-bold   text-gray-700">Create Your Account</h2>
-            <p className=" mt-2 text-gray-700 text-md">Start your fresh journey with us today</p>
+            <h2 className="text-3xl font-bold text-gray-700">Create Your Account</h2>
+            <p className="mt-2 text-gray-700 text-md">Start your fresh journey with us today</p>
           </div>
 
           <div className="grid grid-cols-2 gap-4 mb-6">
@@ -121,9 +121,10 @@ export default function RegisterPage() {
                 key={btn.label}
                 type="button"
                 variant="outline"
+                onClick={() => signIn(btn.provider, { callbackUrl: "/" })}
                 className="h-12 rounded-xl border-gray-200 gap-2 font-semibold text-gray-700 hover:bg-gray-50"
               >
-                <Icon icon={btn.icon} className="text-xl text-red-500" />
+                <Icon icon={btn.icon} className="text-xl" />
                 {btn.label}
               </Button>
             ))}
@@ -199,11 +200,8 @@ export default function RegisterPage() {
         </div>
       </div>
       </div>
-      
     </section>
-          <FeaturesData featuresData={footerFeaturesData}  isFooter={true}/>
+    <FeaturesData featuresData={footerFeaturesData} isFooter={true}/>
     </>
-    
-
   );
 }

@@ -25,7 +25,7 @@ export async function createOrder(cartId: string, formValues: AddressPayloadType
       return { status: false, message: data.message || "Failed to create order" };
     }
 
-    revalidateTag("cart"); 
+  revalidateTag("cart", "/");
 
     return { ...data, status: true };
 

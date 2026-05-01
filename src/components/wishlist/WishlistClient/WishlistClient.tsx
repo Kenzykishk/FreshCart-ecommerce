@@ -22,7 +22,7 @@ export default function WishlistClient({ initialItems }: { initialItems: any[] }
 
   async function handleAddToCart(productId: string) {
     const res = await addToCart(productId);
-    if (res?.status) toast.success("Added to Cart!");
+if (res?.ok) toast.success("Added to Cart!");
     else toast.error("Failed to add to cart");
   }
 

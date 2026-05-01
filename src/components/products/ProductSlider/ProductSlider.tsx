@@ -1,6 +1,6 @@
 "use client"
 import Image from 'next/image'
-import { Swiper, SwiperSlide } from 'swiper/react';
+import { Swiper, SwiperClass, SwiperSlide } from 'swiper/react';
 import { FreeMode, Thumbs } from 'swiper/modules';
 import  { useState } from 'react';
 
@@ -9,8 +9,7 @@ interface ProductSliderProps {
 }
 
 export default function ProductSlider({ images }: ProductSliderProps) {
-  const [thumbsSwiper, setThumbsSwiper] = useState(null);
-
+const [thumbsSwiper, setThumbsSwiper] = useState<SwiperClass | null>(null);
   return (
     <div className="border rounded-lg  mx-auto pb-5">
       
