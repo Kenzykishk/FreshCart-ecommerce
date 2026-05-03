@@ -57,7 +57,6 @@ function SearchPageContent() {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [sortOpen, setSortOpen] = useState(false);
 
-  // ✅ hasActiveFilters متاحة في كل الـ component
   const hasActiveFilters =
     selectedCategories.length > 0 ||
     selectedBrands.length > 0 ||
@@ -102,7 +101,6 @@ function SearchPageContent() {
         );
       }
 
-      // ✅ طبّق الـ query بس لو مفيش فلاتر مختارة
       if (query && !hasActiveFilters) {
         const q = query.toLowerCase();
         filtered = filtered.filter((p: any) =>
@@ -301,7 +299,6 @@ function SearchPageContent() {
             </div>
 
         
-            {/* ✅ التعديل هنا: مش بيعرض "for dell" لو في فلاتر مختارة */}
             <p className="text-sm text-gray-500 mb-4">
               {loading ? "Loading..." : `${displayedProducts.length} products found`}
               {!loading && query && !hasActiveFilters && (
