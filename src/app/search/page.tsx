@@ -95,7 +95,14 @@ useEffect(() => {
       );
     }
 
-    if (query) {
+    // ✅ طبّق الـ query بس لو مفيش فلاتر مختارة
+    const hasActiveFilters =
+      selectedCategories.length > 0 ||
+      selectedBrands.length > 0 ||
+      minPrice ||
+      maxPrice;
+
+    if (query && !hasActiveFilters) {
       const q = query.toLowerCase();
       filtered = filtered.filter((p: any) =>
         p.title.toLowerCase().includes(q) ||
