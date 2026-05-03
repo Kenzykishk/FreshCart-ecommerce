@@ -57,6 +57,13 @@ function SearchPageContent() {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [sortOpen, setSortOpen] = useState(false);
 
+  // ✅ hasActiveFilters متاحة في كل الـ component
+  const hasActiveFilters =
+    selectedCategories.length > 0 ||
+    selectedBrands.length > 0 ||
+    !!minPrice ||
+    !!maxPrice;
+
   useEffect(() => {
     async function fetchMeta() {
       const [categoriesRes, brandsRes] = await Promise.all([
@@ -69,53 +76,47 @@ function SearchPageContent() {
     fetchMeta();
   }, []);
 
-useEffect(() => {
-  async function fetchProducts() {
-    setLoading(true);
+  useEffect(() => {
+    async function fetchProducts() {
+      setLoading(true);
 
-    const products = await getAllProducts({
-      category: selectedCategories.length === 1 ? selectedCategories[0] : undefined,
-      brand: selectedBrands.length === 1 ? selectedBrands[0] : undefined,
-      minPrice: minPrice || undefined,
-      maxPrice: maxPrice || undefined,
-      sort: sort || undefined,
-    });
+      const products = await getAllProducts({
+        category: selectedCategories.length === 1 ? selectedCategories[0] : undefined,
+        brand: selectedBrands.length === 1 ? selectedBrands[0] : undefined,
+        minPrice: minPrice || undefined,
+        maxPrice: maxPrice || undefined,
+        sort: sort || undefined,
+      });
 
-    let filtered = products;
+      let filtered = products;
 
-    if (selectedCategories.length > 1) {
-      filtered = filtered.filter((p: any) =>
-        selectedCategories.includes(p.category?._id)
-      );
+      if (selectedCategories.length > 1) {
+        filtered = filtered.filter((p: any) =>
+          selectedCategories.includes(p.category?._id)
+        );
+      }
+
+      if (selectedBrands.length > 1) {
+        filtered = filtered.filter((p: any) =>
+          selectedBrands.includes(p.brand?._id || "")
+        );
+      }
+
+      // ✅ طبّق الـ query بس لو مفيش فلاتر مختارة
+      if (query && !hasActiveFilters) {
+        const q = query.toLowerCase();
+        filtered = filtered.filter((p: any) =>
+          p.title.toLowerCase().includes(q) ||
+          p.category?.name?.toLowerCase().includes(q) ||
+          p.brand?.name?.toLowerCase().includes(q)
+        );
+      }
+
+      setDisplayedProducts(filtered);
+      setLoading(false);
     }
-
-    if (selectedBrands.length > 1) {
-      filtered = filtered.filter((p: any) =>
-        selectedBrands.includes(p.brand?._id || "")
-      );
-    }
-
-    // ✅ طبّق الـ query بس لو مفيش فلاتر مختارة
-    const hasActiveFilters =
-      selectedCategories.length > 0 ||
-      selectedBrands.length > 0 ||
-      minPrice ||
-      maxPrice;
-
-    if (query && !hasActiveFilters) {
-      const q = query.toLowerCase();
-      filtered = filtered.filter((p: any) =>
-        p.title.toLowerCase().includes(q) ||
-        p.category?.name?.toLowerCase().includes(q) ||
-        p.brand?.name?.toLowerCase().includes(q)
-      );
-    }
-
-    setDisplayedProducts(filtered);
-    setLoading(false);
-  }
-  fetchProducts();
-}, [query, selectedCategories, selectedBrands, minPrice, maxPrice, sort]);
+    fetchProducts();
+  }, [query, selectedCategories, selectedBrands, minPrice, maxPrice, sort]);
 
   function toggleCategory(id: string) {
     setSelectedCategories((prev) =>
@@ -168,10 +169,8 @@ useEffect(() => {
 
         <div className="flex gap-6">
 
-  
           <aside className="hidden lg:block w-64 shrink-0">
 
-        
             <div className="bg-white rounded-2xl p-5 mb-4 shadow-sm">
               <h3 className="font-semibold text-gray-800 mb-4">Categories</h3>
               <div className="space-y-2 max-h-64 overflow-y-auto pr-1">
@@ -226,7 +225,6 @@ useEffect(() => {
               </div>
             </div>
 
-        
             <div className="bg-white rounded-2xl p-5 shadow-sm">
               <h3 className="font-semibold text-gray-800 mb-4">Brands</h3>
               <div className="space-y-2 max-h-64 overflow-y-auto pr-1">
@@ -246,7 +244,6 @@ useEffect(() => {
               </div>
             </div>
 
-          
             {(selectedCategories.length > 0 || selectedBrands.length > 0 || minPrice || maxPrice) && (
               <button
                 onClick={clearAll}
@@ -257,7 +254,6 @@ useEffect(() => {
             )}
           </aside>
 
-      
           <div className="flex-1">
 
             <div className="flex items-center justify-between mb-5">
@@ -276,7 +272,6 @@ useEffect(() => {
                 </button>
               </div>
 
-        
               <div className="relative">
                 <button
                   onClick={() => setSortOpen(!sortOpen)}
@@ -306,14 +301,14 @@ useEffect(() => {
             </div>
 
         
-          <p className="text-sm text-gray-500 mb-4">
-  {loading ? "Loading..." : `${displayedProducts.length} products found`}
-  {!loading && query && (
-    <> for <span className="font-semibold text-gray-800">"{query}"</span></>
-  )}
-</p>
+            {/* ✅ التعديل هنا: مش بيعرض "for dell" لو في فلاتر مختارة */}
+            <p className="text-sm text-gray-500 mb-4">
+              {loading ? "Loading..." : `${displayedProducts.length} products found`}
+              {!loading && query && !hasActiveFilters && (
+                <> for <span className="font-semibold text-gray-800">"{query}"</span></>
+              )}
+            </p>
 
-        
             {loading ? (
               <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
                 {Array.from({ length: 8 }).map((_, i) => (
@@ -336,7 +331,7 @@ useEffect(() => {
                   : "flex flex-col gap-4"
               }>
                 {displayedProducts.map((product) => (
-                  <ProductCard key={product._id} prod={product}  />
+                  <ProductCard key={product._id} prod={product} />
                 ))}
               </div>
             )}
